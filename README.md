@@ -1,0 +1,1 @@
+# AzureMonitorQueimadas-Terraform-CICD

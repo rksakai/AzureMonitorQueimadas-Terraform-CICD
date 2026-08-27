@@ -2,6 +2,7 @@
 **/.terraform/
 **/*.tfstate
 **/*.tfstate.*
+**/.terraform.lock.hcl
 
 # Logs e variáveis locais comuns
 **/terraform.tfvars

@@ -1,0 +1,30 @@
+name: Destroy - Infra Dia 1
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Digite "destroy" para confirmar a destruicao dos recursos'
+        required: true
+
+env:
+  TF_VAR_mysql_admin_password: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
+
+jobs:
+  terraform-destroy:
+    if: github.event.inputs.confirm == 'destroy'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: Azure Login
+        run: |
+          az login --service-principal \
+            -u ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }} \
+            -p ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }} \
+            --tenant ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
+      - run: terraform init
+      - run: terraform destroy -auto-approve
